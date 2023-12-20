@@ -10,7 +10,7 @@ def listar_estudantes(con, window):
         cursor.execute(query)
 
         header = '----------------------------- LISTA DE ALUNOS -----------------------------\n'
-        header += '\n         ------ Matrícula ------                ------ Nome ------\n'
+        header += '\n         ------ Matrícula ------                ------ Nome ------\n\n'
 
         data = [f'               {campo[0]}                             {campo[1]} ' for campo in cursor.fetchall()]
         result = header + '\n'.join(data)
@@ -42,8 +42,14 @@ def main():
         if eventos == psg.WINDOW_CLOSED or eventos == 'Sair':
             break
         elif eventos == 'Inserir':
-            create(con, [(valores['matrícula'], valores['nome'])])
-            psg.popup('Estudante inserido com sucesso.', title='Sucesso')
+            matricula = valores['matrícula'].strip()
+            nome = valores['nome'].strip()
+
+            if matricula and nome:
+                create(con, [(matricula, nome)])
+                psg.popup('Estudante inserido com sucesso.', title='Sucesso')
+            else:
+                psg.popup('Por favor, informe a matrícula e o nome.', title='Erro')
         elif eventos == 'Excluir':
             delete(con, [(valores['matrícula'],)])
             psg.popup('Estudante excluído com sucesso.', title='Sucesso')
